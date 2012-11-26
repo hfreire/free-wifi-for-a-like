@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
+<head>
+	<title>Linkafy Wi-Fi</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="expires" content="-1" />
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<style type="text/css">
+	h1 {
+		text-align: center;
+	}
+	h2 {
+		height: 48px;
+		text-align: center;
+		font-size: 24px;
+		line-height: 22px;
+	}
+	#fbLoginButton {
+		display: none;
+		background: url(img/fbLoginButton.png);
+		width: 193px;
+		height: 43px;
+		border: none;
+		margin: 0 auto;
+	}
+	#fbLoginButton:hover {
+		cursor: pointer;
+	}
+	#fbLikeButton {
+		display: none;
+		width: 300px;
+		height: 260px;
+		margin: 0 auto;
+	}
+	#routerLogin {
+		display: none;
+		width: 300px;
+		margin: 0 auto;
+	}
+	#routerLogin {
+		text-align: center;
+	}
+	#fbLogoutButton {
+		display: none;
+		margin: 20px auto;
+		width: 80px;
+	}
+	</style>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" />
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	$(if chap-id)
+	<form name="sendin" action="$(link-login-only)" method="post">
+		<input type="hidden" name="username" />
+		<input type="hidden" name="password" />
+		<input type="hidden" name="dst" value="$(link-orig)" />
+		<input type="hidden" name="popup" value="true" />
+	</form>
+	
+	<script type="text/javascript" src="/md5.js"></script>
+	<script type="text/javascript">
+	<!--
+	function doLogin() {
+		document.sendin.username.value = document.login.username.value;
+		document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+		document.sendin.submit();
+		return false;
+	}
+	//-->
+	</script>
+	$(endif)
+	<div id="fb-root"></div>
+	<script src="//connect.facebook.net/en_US/all.js"></script>
+
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<h1 id="title"></h1>
+				<h2 id="message"></h2>
+				<div id="fbLoginButton">
+				</div>
+				<div id="fbLikeButton">
+					<fb:like-box href="http://www.facebook.com/linkafy" width="292" show_faces="true" stream="false" header="false"></fb:like-box>
+				</div>
+				<div id="routerLogin">
+					<form name="login" action="$(link-login-only)" method="post"
+					$(if chap-id) onSubmit="return doLogin()" $(endif)>
+					<input type="hidden" name="dst" value="$(link-orig)" />
+					<input type="hidden" name="popup" value="true" />
+					<input style="width: 80px" name="username" type="hidden" value="free"/>
+					<input style="width: 80px" name="password" type="hidden" value="free"/>
+					<input class="btn btn-large btn-primary"type="submit" value="Give me free Wi-Fi!" />
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span12">
+			<div id="fbLogoutButton">
+				<a class="fb_button fb_button_medium">
+					<span class="fb_button_text">Logout</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+</script>
+
+<script type="text/javascript">
+document.login.username.focus();
+
+function checkLike() {
+	FB.api("me/likes/349575318399885", function(response) {
+		if ( response.data.length === 1 ) { //there should only be a single value inside "data"
+			showRouterLoginButton();
+		} else {
+			showFbLikeButton();
+		}
+	});
+}
+
+$('#fbLogoutButton').click(function() {
+        FB.logout(function (response) {
+            //Do what ever you want here when logged out like reloading the page
+            window.location.reload();
+        });
+ });
+
+$('#fbLoginButton').click(function() {
+		/*FB.login(function(response) {
+			if (response.authResponse) {
+				checkLike();
+			} else {
+			
+			}
+		}, { scope: 'user_likes' });*/
+		window.location.replace("https://www.facebook.com/dialog/oauth/?client_id=256022574485906&redirect_uri=http://wifi.linkafy.com&scope=user_likes");
+	});
+
+function showFbLoginButton() {
+	$('#title').text('Do You Want Free Wi-Fi Access?');
+	$('#message').text('Sign in with your Facebook account');
+	$('#routerLogin').css('display', 'none');
+	$('#fbLikeButton').css('display', 'none');
+	$('#fbLoginButton').css('display', 'block');
+	$('#fbLogoutButton').css('display', 'none');
+}
+
+function showFbLikeButton() {
+	$('#title').text('Do You Want Free Wi-Fi Access?');
+	$('#message').text('Give us a like on Facebook!');
+	$('#fbLoginButton').css('display', 'none');
+	$('#routerLogin').css('display', 'none');
+	$('#fbLikeButton').css('display', 'block');
+	$('#fbLogoutButton').css('display', 'block');
+}
+
+function showRouterLoginButton() {
+	$('#title').text('Do You Want Free Wi-Fi Access?');
+	$('#message').text('');
+	$('#fbLikeButton').css('display', 'none');
+	$('#fbLoginButton').css('display', 'none');
+	$('#routerLogin').css('display', 'block');
+	$('#fbLogoutButton').css('display', 'none');
+}
+
+$(document).ready(function(){
+
+	if (window.location.href.indexOf('wifi.linkafy.com') <= -1)
+		window.location.replace('http://wifi.linkafy.com/login' + window.location.search);
+
+	console.debug(window.location.search);
+
+	FB.Event.subscribe('edge.create',
+		function(response) {
+			showRouterLoginButton();
+		}
+	);
+
+	FB.init({
+		appId  : '256022574485906',
+		status : true, 
+		cookie : true, 
+		xfbml  : true  
+	});
+
+	if (((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) || (navigator.userAgent.match(/iPad/i))) {
+
+		showRouterLoginButton();
+
+	} else {
+
+		FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {
+			    // the user is logged in and has authenticated your
+			    // app, and response.authResponse supplies
+			    // the user's ID, a valid access token, a signed
+			    // request, and the time the access token 
+			    // and signed request each expire
+			    checkLike();
+			} else if (response.status === 'not_authorized') {
+			    // the user is logged in to Facebook, 
+			    // but has not authenticated your app
+			    $('#message').text('Y U NOT LIKE US?');
+			} else {
+			    // the user isn't logged in to Facebook.
+			    showFbLoginButton();
+			}
+		});
+	}
+});
+</script>
+
+</body>
+</html>
